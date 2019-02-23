@@ -1,0 +1,8 @@
+{
+  "name":"wing-bot",
+  "version":"1.0.0",
+  "description":"I serve many of your wings needs",
+  "main":"bot.js",
+  "author":"Tyler Davidson",
+  "dependencies": {}
+}

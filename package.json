@@ -1,11 +1,10 @@
 {
   "name": "wing-bot",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "I serve many of your wings needs",
   "main": "bot.js",
   "author": "Tyler Davidson",
   "dependencies": {
-    "discord.io": "github:woor/discord.io#gateway_v6",
     "discord.js": "^11.4.2",
     "giantbomb": "^2.0.2"
   }

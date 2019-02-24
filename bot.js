@@ -10,6 +10,18 @@ bot.once('ready', () => {
   console.log(bot.username + ' - (' + bot.id + ')');
 });
 
+// ********************** COMMAND LIST **************
+function listCommands() {
+  const commandsEmbed = new Discord.RichEmbed()
+    .setTitle('Available Commands')
+    .setDescription(
+      "!countdown -> how long until wings?\n" +
+      "!game-lookup <name> -> can you really not figure out what this does?")
+    .setColor(0x326FD2);
+  return commandsEmbed;
+}
+// ********************** COMMAND LIST **************
+
 // ********** WINGS COUNTDOWN ************
 function thursday() {
   var ret = new Date();
@@ -104,6 +116,9 @@ bot.on('message', message => {
 
     args = args.splice(1);
     switch(cmd) {
+      case 'commands':
+        sendMessage(message.channel, listCommands());
+        break;
       case 'countdown':
         sendMessage(message.channel, timeToWings());
         break;

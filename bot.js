@@ -32,6 +32,9 @@ function timeToWings() {
 }
 // ********** END WINGS COUNTDOWN ************
 
+// ********** GAME LOOKUP  ************
+
+// ********** END GAME LOOKUP ************
 
 function sendMessage(channelID, message) {
   bot.sendMessage({

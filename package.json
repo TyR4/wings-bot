@@ -6,6 +6,7 @@
   "author":"Tyler Davidson",
   "private":true,
   "dependencies": {
-    "discord.io": "github:woor/discord.io#gateway_v6"
+    "discord.io": "github:woor/discord.io#gateway_v6",
+    "giantbomb": "^2.0.2",
   }
 }

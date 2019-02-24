@@ -35,7 +35,7 @@ function timeToWings() {
 
 function sendMessage(channelID, message) {
   bot.sendMessage({
-    // to: '442000366599405568',
+    // to: '442000366599405568', // this is the bot-dump channel
     to: channelID,
     message: message,
     typing: true

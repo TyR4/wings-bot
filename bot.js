@@ -45,11 +45,14 @@ function getDate(dateString) {
 }
 
 function buildMessage(json) {
-    var message = "";
+    var message = [];
     for (var i = 0; i < json.number_of_total_results; ++i) {
-        var result = json.results[i];
-        message += "**" + result.name + "** (" + getDate(result.original_release_date) + ")\n";
-        message += result.deck + "\n\n";
+      var result = json.results[i];
+      const embed = new Discord.RichEmbed()
+        .setTitle(result.name + " (" + getDate(result.original_release_date) + ")")
+        .setDescription(result.deck)
+        .setThumbnail(result.image.thumb_url);
+      message.push(embed);
     }
     return message;
 }
@@ -78,7 +81,16 @@ function lookupGame(channel, message) {
 // ********** END GAME LOOKUP ************
 
 function sendMessage(channel, message) {
-  channel.send(message);
+  if (Array.isArray(message)) {
+    for (var i = 0; i < message.length; ++i) {
+      channel.send(message[i])
+        .then(console.log)
+        .catch(console.error);
+    }
+  }
+  else {
+    channel.send(message);
+  }
 }
 
 bot.on('message', message => {
@@ -96,7 +108,7 @@ bot.on('message', message => {
         lookupGame(message.channel, args.join(' '));
         break;
       default:
-        sendMessage('I think ' + message.author + ' is drunk already');
+        sendMessage(message.channel, 'I think ' + message.author.username + ' is drunk already');
     }
   }
 });

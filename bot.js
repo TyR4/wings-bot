@@ -13,15 +13,7 @@ bot.on('ready', function (event) {
   logger.info(bot.username + ' - (' + bot.id + ')');
 });
 
-function sendMessage(channelID, message) {
-  bot.sendMessage({
-    // to: '442000366599405568',
-    to: channelID,
-    message: timeToWings(),
-    typing: true
-  });
-}
-
+// ********** WINGS COUNTDOWN ************
 function thursday() {
   var ret = new Date();
   ret.setDate(ret.getDate() + (4 - 1 - ret.getDay() + 7) % 7 + 1);
@@ -37,6 +29,17 @@ function timeToWings() {
     howLong = howLong + days + " days ";
   howLong = howLong + (hoursToWings % 24) + " hours until wings";
   return howLong;
+}
+// ********** END WINGS COUNTDOWN ************
+
+
+function sendMessage(channelID, message) {
+  bot.sendMessage({
+    // to: '442000366599405568',
+    to: channelID,
+    message: message,
+    typing: true
+  });
 }
 
 bot.on('message', function (user, userID, channelID, message, event) {

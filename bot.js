@@ -49,9 +49,13 @@ function buildMessage(json) {
     for (var i = 0; i < json.number_of_total_results; ++i) {
       var result = json.results[i];
       const embed = new Discord.RichEmbed()
-        .setTitle(result.name + " (" + getDate(result.original_release_date) + ")")
+        .setTitle("**" + result.name + "**" + " (" + getDate(result.original_release_date) + ")")
+        .setColor(0x00AE86)
         .setDescription(result.deck)
-        .setThumbnail(result.image.thumb_url);
+        .setFooter('Last updated')
+        .setTimestamp(result.date_last_updated)
+        .setThumbnail(result.image.original_url)
+        .setURL(result.site_detail_url);
       message.push(embed);
     }
     return message;

@@ -1,16 +1,14 @@
-var Discord = require('discord.io');
+var Discord = require('discord.js');
 var logger = require('winston');
 var auth = require('./auth.json');
+var giantbomb = require('giantbomb');
 
-var bot = new Discord.Client({
-  token:auth.token,
-  autorun:true
-});
+var bot = new Discord.Client();
 
-bot.on('ready', function (event) {
-  logger.info('Connected');
-  logger.info('Logged in as: ');
-  logger.info(bot.username + ' - (' + bot.id + ')');
+bot.once('ready', () => {
+  console.log('Connected');
+  console.log('Logged in as: ');
+  console.log(bot.username + ' - (' + bot.id + ')');
 });
 
 // ********** WINGS COUNTDOWN ************
@@ -33,28 +31,74 @@ function timeToWings() {
 // ********** END WINGS COUNTDOWN ************
 
 // ********** GAME LOOKUP  ************
+var gb = giantbomb(auth.gbtoken);
 
-// ********** END GAME LOOKUP ************
-
-function sendMessage(channelID, message) {
-  bot.sendMessage({
-    // to: '442000366599405568', // this is the bot-dump channel
-    to: channelID,
-    message: message,
-    typing: true
-  });
+function getDate(dateString) {
+    const monthNames = [
+        "January", "February", "March",
+        "April", "May", "June", "July",
+        "August", "September", "October",
+        "November", "December"
+    ];
+    var date = new Date(dateString);
+    return monthNames[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
 }
 
-bot.on('message', function (user, userID, channelID, message, event) {
-  if (message.substring(0,1) == '!') {
-    var args = message.substring(1).split(' ');
+function buildMessage(json) {
+    var message = "";
+    for (var i = 0; i < json.number_of_total_results; ++i) {
+        var result = json.results[i];
+        message += "**" + result.name + "** (" + getDate(result.original_release_date) + ")\n";
+        message += result.deck + "\n\n";
+    }
+    return message;
+}
+
+function lookupGame(channel, message) {
+  var gameName = message.replace("!find ", "");
+  const config = {
+      sortBy: 'original_release_date',
+      sortDir: 'asc'
+  };
+  gb.games.search(gameName, config, (err, res, json) => {
+      if (!err) {
+          sendMessage(
+              channel,
+              json.number_of_total_results > 10
+                  ? "Buddy, do you have any idea how many " + gameName + " games there are?! You need to narrow it down for me."
+                  : json.number_of_total_results === 0
+                      ? "That's not a thing."
+                      : buildMessage(json));
+      }
+      else {
+          sendMessage(channel, "Something bad happened. I blame you. Or the universe.");
+      }
+  });
+}
+// ********** END GAME LOOKUP ************
+
+function sendMessage(channel, message) {
+  channel.send(message);
+}
+
+bot.on('message', message => {
+  var content = message.content;
+  if (content.substring(0,1) == '!') {
+    var args = content.substring(1).split(' ');
     var cmd = args[0];
 
     args = args.splice(1);
     switch(cmd) {
       case 'countdown':
-        sendMessage(channelID, timeToWings());
+        sendMessage(message.channel, timeToWings());
         break;
+      case 'game-lookup':
+        lookupGame(message.channel, args.join(' '));
+        break;
+      default:
+        sendMessage('I think ' + message.author + ' is drunk already');
     }
   }
 });
+
+bot.login(auth.token);

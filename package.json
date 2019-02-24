@@ -4,5 +4,8 @@
   "description":"I serve many of your wings needs",
   "main":"bot.js",
   "author":"Tyler Davidson",
-  "dependencies": {}
+  "private":true,
+  "dependencies": {
+    "discord.io": "github:woor/discord.io#gateway_v6"
+  }
 }
